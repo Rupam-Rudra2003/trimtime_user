@@ -1,0 +1,411 @@
+/* Copied core styles from the original dashboard.html (trimmed for readability) */
+
+@view-transition {
+    navigation: auto;
+}
+
+body {
+    box-sizing: border-box;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 8px;
+    top: 100%;
+    right: 0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.filter-btn,
+.service-filter-btn {
+    transition: all 0.3s ease;
+}
+
+.salon-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.salon-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.slideshow-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slideshow-slide.active {
+    opacity: 1;
+}
+
+.slideshow-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slideshow-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.slideshow-indicator.active {
+    background-color: white;
+}
+
+nav {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid rgba(229, 231, 235, 0.8);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Small helpers used by components */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* Keep tailwind utility classes available via CDN in index.html */
+
+
+/* Bookings services box and category tags */
+
+.services-box::-webkit-scrollbar {
+    height: 8px;
+    width: 8px
+}
+
+.services-box::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 6px
+}
+
+
+/* Tag colors: men - blue, women - pink, unisex - orange */
+
+.tag--men {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+}
+
+.tag--women {
+    background-color: #FCE7F3;
+    color: #BE185D;
+}
+
+.tag--unisex {
+    background-color: #FFF7ED;
+    color: #C2410C;
+}
+
+
+/* small utility to avoid very tight tag text */
+
+.services-box .tag--men,
+.services-box .tag--women,
+.services-box .tag--unisex {
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+
+/* Waiting/time badges used in SalonCard and Favorites */
+
+.waiting-badge {
+    background-color: #10B981;
+}
+
+
+/* green-500 */
+
+.time-badge {
+    background-color: #3B82F6;
+}
+
+
+/* blue-500 */
+
+.waiting-badge,
+.time-badge {
+    display: inline-flex;
+    align-items: center;
+}
+
+
+/* Booking card interactive styles */
+
+.booking-card {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.booking-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.08);
+}
+
+
+/* Header caret */
+
+.booking-caret {
+    transition: transform 0.2s ease;
+}
+
+.booking-caret.rotate {
+    transform: rotate(90deg);
+}
+
+
+/* Services box expand/collapse animations */
+
+.services-box {
+    transition: max-height 0.28s ease, padding 0.18s ease, opacity 0.18s ease;
+    overflow: hidden;
+}
+
+.services-box.collapsed {
+    max-height: 0;
+    padding-top: 0.0rem;
+    padding-bottom: 0.0rem;
+    opacity: 0;
+    border-color: transparent;
+}
+
+.services-box.expanded {
+    max-height: 400px;
+    /* large enough to show list */
+    opacity: 1;
+}
+
+
+/* Scrollable services container used on salon & booking pages */
+
+.services-scroll {
+    max-height: 260px;
+    /* adjust as needed */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.services-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.services-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+
+/* Ensure no extra gap below the scrollable services area */
+
+.services-scroll {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+/* Make header clickable area look interactive */
+
+.booking-card .cursor-pointer {
+    cursor: pointer
+}
+
+
+/* Small visual polish for the booking header */
+
+.booking-card h3 {
+    display: inline-block
+}
+
+
+/* Auth page styles (from provided design) */
+
+.auth-container {
+    background: #ffffff;
+}
+
+.auth-card {
+    background: #ffffff;
+    border: 2px solid #f1f5f9;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.input-field {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.input-field:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+}
+
+.auth-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.auth-btn:active {
+    transform: translateY(0);
+}
+
+.auth-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.secondary-btn {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    color: #374151;
+}
+
+.secondary-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-1px);
+}
+
+.loading-spinner {
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.success-message {
+    background: linear-gradient(135deg, #10b981, #059669);
+    animation: slideIn 0.5s ease-out;
+}
+
+.error-message {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.floating-label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0 4px;
+    color: #6b7280;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-size: 14px;
+}
+
+.input-field:focus+.floating-label,
+.input-field:not(:placeholder-shown)+.floating-label {
+    top: 0;
+    font-size: 12px;
+    color: #3b82f6;
+}
+
+.required-asterisk {
+    color: #ef4444;
+}
+
+.tab-btn {
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+
+.form-container {
+    display: none;
+}
+
+.form-container.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.brand-logo {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+
+/* Faded style for closed salons on the home page */
+
+.salon-closed {
+    opacity: 0.55;
+    filter: grayscale(60%);
+}
