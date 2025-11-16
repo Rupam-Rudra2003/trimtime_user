@@ -200,6 +200,15 @@
             "bridal-makeup": "Bridal Makeup"
         }
     },
+    "locations": {
+        "kaichar": "Kaichar",
+        "khirogram": "Khirogram",
+        "mathrun": "Mathrun",
+        "khudrun": "Khudrun",
+        "singot": "Singot",
+        "itta": "Itta",
+        "nigan": "Nigan"
+    },
     "faq": {
         "title": "FAQ",
         "intro": "Common questions about using TrimTime and booking appointments.",
