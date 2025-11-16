@@ -200,6 +200,15 @@
             "bridal-makeup": "ব্রাইডাল মেকআপ"
         }
     },
+    "locations": {
+        "kaichar": "কাইচার",
+        "khirogram": "খিরোগ্রাম",
+        "mathrun": "মাঠরুন",
+        "khudrun": "খুদরন",
+        "singot": "সিংট",
+        "itta": "ইট্টা",
+        "nigan": "নিগান"
+    },
     "faq": {
         "title": "প্রশ্নোত্তর",
         "intro": "TrimTime ব্যবহার ও বুকিং সংক্রান্ত সাধারণ প্রশ্ন।",
