@@ -57,14 +57,14 @@ export default function Header({ companyName, currentLocation, onLocationChange 
               <div className="relative">
                 <button onClick={()=>setOpen(o=>!o)} className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
                   <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/></svg>
-                  <span id="current-location" className="text-sm font-medium text-gray-700">{currentLocation}</span>
+                  <span id="current-location" className="text-sm font-medium text-gray-700">{t(`locations.${String(currentLocation).toLowerCase()}`, currentLocation)}</span>
                   <svg className={`w-4 h-4 text-gray-600 transform transition-transform ${open? 'rotate-180':''}`} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
                 </button>
 
                 {open && (
                   <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-md z-40">
                     {locations.map(loc => (
-                      <button key={loc} onClick={()=>handleSelect(loc)} className="block w-full text-left px-4 py-2 hover:bg-gray-100">{loc}</button>
+                      <button key={loc} onClick={()=>handleSelect(loc)} className="block w-full text-left px-4 py-2 hover:bg-gray-100">{t(`locations.${String(loc).toLowerCase()}`, loc)}</button>
                     ))}
                   </div>
                 )}

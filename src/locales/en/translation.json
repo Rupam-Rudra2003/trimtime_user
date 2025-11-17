@@ -237,6 +237,15 @@
             "r4": { "name": "Rafi", "comment": "Nice ambiance, will visit again." }
         }
     },
+    "locations": {
+        "kaichar": "Kaichar",
+        "khirogram": "Khirogram",
+        "mathrun": "Mathrun",
+        "khudrun": "Khudrun",
+        "singot": "Singot",
+        "itta": "Itta",
+        "nigan": "Nigan"
+    },
     "faq": {
         "title": "FAQ",
         "intro": "Common questions about using TrimTime and booking appointments.",
