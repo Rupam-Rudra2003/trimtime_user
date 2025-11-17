@@ -170,7 +170,34 @@
     "salonDetail": {
         "peopleWaitingFallback": "কোনো তথ্য নেই",
         "estimateFallback": "~১৫ মিনিট অপেক্ষা",
+        "waiting": "{{count}} অপেক্ষায়",
+        "waiting_plural": "{{count}} অপেক্ষায়",
+        "min": "মিনিট",
+        "closedBookingNotice": "সালন বন্ধ — বুকিং উপলব্ধ নয়",
+        "closedBookingError": "বুক করা যাবে না: সালন বর্তমানে বন্ধ আছে",
         "notFound": "সালন পাওয়া যায়নি"
+    },
+    "ratings": {
+        "title": "রেটিংস",
+        "notFound": "সালন পাওয়া যায়নি",
+        "noReviews": "এখনও কোনো রিভিউ নেই",
+        "reviews": "রেটিংস",
+        "showMore": "আরও পড়ুন",
+        "showLess": "কম দেখান"
+    },
+    "rateBooking": {
+        "title": "আপনার ভিজিট রেট করুন",
+        "rateLabel": "আপনার রেটিং",
+        "reviewLabel": "একটি রিভিউ লিখুন",
+        "uploadImages": "ছবি আপলোড করুন (ঐচ্ছিক)",
+        "submit": "জমা দিন",
+        "confirmTitle": "জমা নিশ্চিত করুন",
+        "confirmMessage": "আপনি কি নিশ্চিত যে আপনি এই রেটিংটি জমা দিতে চান?",
+        "notFound": "বুকিং পাওয়া যায়নি"
+    },
+    "salonStatus": {
+        "open": "খোলা",
+        "closed": "বন্ধ"
     },
     "buttons": {
         "editPhoto": "ছবি পরিবর্তন",
@@ -189,6 +216,10 @@
             "glamour-studio": {
                 "name": "গ্ল্যামার স্টুডিও",
                 "address": "মেইন রোড, কাইচার"
+            },
+            "sunset-salon-closed": {
+                "name": "সানসেট সালন",
+                "address": "লেকসাইডের বিপরীতে, কাইচার"
             }
         },
         "services": {
@@ -198,6 +229,12 @@
             "manicure": "ম্যানিকিউর",
             "hair-styling": "চুলের স্টাইলিং",
             "bridal-makeup": "ব্রাইডাল মেকআপ"
+        },
+        "reviews": {
+            "r1": { "name": "আশা", "comment": "দারুণ হেয়ারকাট এবং বন্ধুত্বপূর্ণ স্টাফ।" },
+            "r2": { "name": "বিক্রম", "comment": "ভালো সার্ভিস, একটু ভিড় ছিল কিন্তু মূল্যবান।" },
+            "r3": { "name": "প্রিয়া", "comment": "মেকআপটি চমৎকার — আমার বোনের জন্য সুপারিশ করছি।" },
+            "r4": { "name": "রাফি", "comment": "আবহাওয়া সুন্দর, আবার যাব।" }
         }
     },
     "faq": {

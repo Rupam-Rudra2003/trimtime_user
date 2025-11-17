@@ -2,10 +2,12 @@ import React from 'react'
 import { getProfile } from '../utils/profile'
 import { useTranslation } from 'react-i18next'
 import { useDynamicLocalization } from '../utils/localize'
+import { useNavigate } from 'react-router-dom'
 
 export default function SalonCard({ salon, onOpen, onBook, quickBook, isFavorite, onToggleFavorite }) {
   const { t } = useTranslation()
   const { salonName, salonAddress, serviceName } = useDynamicLocalization()
+  const navigate = useNavigate()
   const [showQuick, setShowQuick] = React.useState(false)
   const [selected, setSelected] = React.useState([])
   const [date, setDate] = React.useState(new Date().toISOString().split('T')[0])
@@ -52,8 +54,8 @@ export default function SalonCard({ salon, onOpen, onBook, quickBook, isFavorite
   return (
     <>
     <div className={`salon-card zomato-card bg-white rounded-lg shadow-sm mb-4 overflow-hidden cursor-pointer ${salon.status === 'Closed' ? 'salon-closed' : ''}`} onClick={()=>onOpen && onOpen(salon)}>
-      <div className="flex h-44">
-        <div className="w-32 h-44 flex-shrink-0 relative">
+      <div className="flex h-36">
+        <div className="w-32 h-36 flex-shrink-0 relative">
           <div className="card-image-container w-full h-full relative overflow-hidden rounded-l-lg">
             <img src={salon.image} alt={salon.name} className="w-full h-full object-cover" onError={(e)=>e.target.src='https://via.placeholder.com/200'} />
           </div>
@@ -66,14 +68,14 @@ export default function SalonCard({ salon, onOpen, onBook, quickBook, isFavorite
 
         <div className="flex-1 px-5 py-4 flex flex-col justify-between h-full">
           <div className="flex-1">
-            <div className="flex justify-between items-start mb-2">
+            <div className="flex justify-between items-start mb-1">
               <h3 className="font-bold text-gray-900 text-lg leading-tight pr-3">{salonName(salon.id, salon.name)}</h3>
-              <div className="flex items-center bg-green-500 rating-badge px-2 py-1 rounded-lg text-sm font-bold flex-shrink-0 text-white">
+              <button onClick={(e)=>{ e.stopPropagation(); navigate(`/salon/${salon.id}/ratings`) }} className="flex items-center bg-green-500 rating-badge h-6 w-11 p-1 rounded-lg text-sm font-bold flex-shrink-0 text-white">
                 <span>{salon.rating}</span>
                 <span className="ml-1">★</span>
-              </div>
+              </button>
             </div>
-            <p className="text-sm text-gray-500 mb-2">{salonAddress(salon.id, salon.address)}</p>
+            <p className="text-sm text-gray-500 mb-1">{salonAddress(salon.id, salon.address)}</p>
             {/* Show waiting and queue info instead of service names on homepage; add icons for clarity */}
             <div className="text-sm text-gray-700 font-medium mb-3">
               <span className="inline-flex items-center mr-4">
@@ -81,22 +83,36 @@ export default function SalonCard({ salon, onOpen, onBook, quickBook, isFavorite
                   <path d="M13 7a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path d="M2 13.5C2 11 6 10 10 10s8 1 8 3.5V16H2v-2.5z" />
                 </svg>
-                <span className="font-semibold text-gray-900">{salon.waiting || ''}</span>
+                  {
+                    (()=>{
+                      const raw = salon.waiting
+                      if(!raw) return t('salonDetail.peopleWaitingFallback')
+                      const m = String(raw).match(/\d+/)
+                      const count = m ? Number(m[0]) : raw
+                      return t('salonDetail.waiting', { count })
+                    })()
+                  }
               </span>
 
               <span className="inline-flex items-center">
                 <svg className="w-4 h-4 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.75a.75.75 0 00-1.5 0v4.25c0 .207.083.406.23.552l2.5 2.5a.75.75 0 101.06-1.06L10.75 10.04V6.25z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-600">{salon.time || ''}</span>
+                <span className="text-gray-600">{(() => {
+                  const raw = salon.time
+                  if(!raw) return ''
+                  const m = String(raw).match(/\d+/)
+                  const count = m ? Number(m[0]) : raw
+                  return (typeof count === 'number') ? `${count} ${t('salonDetail.min')}` : count
+                })()}</span>
               </span>
             </div>
           </div>
 
-          <div className="mt-auto">
-            <div className="flex justify-between items-center mb-3">
+          <div className="">
+            <div className="flex justify-between items-center mb-2">
               <div className="text-sm">
-                <span className={`${salon.status==='Closed'? 'text-red-600':'text-green-600'} font-semibold`}>{salon.status}</span>
+                <span className={`${salon.status==='Closed'? 'text-red-600':'text-green-600'} font-semibold`}>{t(`salonStatus.${(salon.status||'').toString().toLowerCase()}`, { defaultValue: salon.status })}</span>
                 <span className="text-gray-600"> • {salon.hours}</span>
               </div>
             </div>

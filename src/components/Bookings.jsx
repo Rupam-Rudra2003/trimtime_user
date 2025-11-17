@@ -100,8 +100,18 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
   }, [bookingToCancel])
     // services are always visible now — no expand/collapse state needed
 
-  const upcoming = bookings.filter(b => String(b.status || '').toLowerCase() === 'upcoming')
-  const completed = bookings.filter(b => String(b.status || '').toLowerCase() === 'completed')
+  // sort bookings by recency (use bookingDate if available, otherwise date)
+  const getBookingTime = (b) => {
+    try{
+      const d = b?.bookingDate || b?.date || null
+      const t = d ? new Date(d).getTime() : 0
+      return isNaN(t) ? 0 : t
+    }catch(e){ return 0 }
+  }
+  const sortedBookings = Array.isArray(bookings) ? [...bookings].sort((a,b) => getBookingTime(b) - getBookingTime(a)) : []
+
+  const upcoming = sortedBookings.filter(b => String(b.status || '').toLowerCase() === 'upcoming')
+  const completed = sortedBookings.filter(b => String(b.status || '').toLowerCase() === 'completed')
 
   function formatDay(dateStr){
     try{
@@ -124,20 +134,21 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
   }
 
   function renderBooking(b){
+    const isCompleted = String(b.status || '').toLowerCase() === 'completed'
     return (
-      <div key={b.id} className="bg-white rounded-lg shadow-sm border p-4 relative">
+      <div key={b.id} className={`rounded-lg shadow-sm border px-4 py-3 relative ${isCompleted ? '' : 'bg-white'}`}>
         <div className="mb-1 flex items-start justify-between">
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900">{b.salonId ? salonName(b.salonId, b.salonName) : b.salonName}</h3>
             <p className="text-sm text-gray-600 mt-1">{b.salonId ? salonAddress(b.salonId, b.salonAddress) : b.salonAddress}</p>
           </div>
           <div className="flex-shrink-0 ml-4">
-            <span className={`text-sm font-medium capitalize px-3 py-1 rounded ${String(b.status || '').toLowerCase() === 'upcoming' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>{b.status}</span>
+            <span className={`text-sm font-medium capitalize px-3 py-1 rounded ${String(b.status || '').toLowerCase() === 'upcoming' ? 'bg-green-100 text-green-700' : (isCompleted ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700')}`}>{b.status}</span>
           </div>
         </div>
+
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="inline-flex items-center font-medium">
-            {/* calendar icon + full date */}
             <svg className="w-4 h-4 mr-2 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.2" />
               <path d="M16 2v4M8 2v4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
@@ -146,7 +157,6 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
             <span>{formatFullDate(b.date)}</span>
           </div>
           <div className="inline-flex items-center font-medium">
-            {/* clock icon + time aligned to the right */}
             <svg className="w-4 h-4 mr-2 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.2" />
               <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -154,6 +164,7 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
             <span className="font-medium mr-2">{b.time}</span>
           </div>
         </div>
+
         {b.services && b.services.length > 0 && (
           <div className="services-box services-scroll mt-3 border rounded bg-gray-50">
             {b.services.map((svc, idx) => {
@@ -175,54 +186,43 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
             })}
           </div>
         )}
-        <div className="flex items-center justify-between">
+
+        <div className="flex items-center justify-between mt-2">
           <div className="text-sm">
             <span className="mr-2">{(b.services && b.services.length) || 0} {(b.services && b.services.length) === 1 ? t('common.service', 'service') : t('common.services', 'services')}</span>
             <span className="font-semibold">₹{b.totalPrice ?? 0}</span>
           </div>
           <div className="flex items-center space-x-3">
             {String(b.status || '').toLowerCase() === 'upcoming' && (<button onClick={(e)=>{ e.stopPropagation(); setBookingToCancel(b) }} className="text-red-500">{t('bookings.cancel')}</button>)}
-            <button onClick={()=>callSalon(b.salonName)} className="text-blue-500">{t('bookings.callSalon')}</button>
-          </div>
-        </div>
-        {/* Feedback UI for completed bookings */}
-        {String(b.status || '').toLowerCase() === 'completed' && (
-          <div className="mt-3 p-3 border rounded bg-gray-50">
-            {b.feedback ? (
-              <div className="text-sm text-green-700">{t('bookings.feedbackSaved', 'Feedback saved')}</div>
-            ) : (
-              <div>
-                <div className="mb-2 text-sm font-medium">{t('bookings.rateThisService', 'Rate this service')}</div>
-                <div className="flex items-center space-x-2 mb-2">
+            {String(b.status || '').toLowerCase() === 'completed' && !b.feedback && (
+              <div className="flex items-center space-x-2">
+                <button onClick={()=>navigate(`/rate/${b.id}`)} className="text-blue-500">{t('bookings.rateUs','Rate Us')}</button>
+              </div>
+            )}
+            {String(b.status || '').toLowerCase() === 'completed' && b.feedback && (
+              <div className="absolute right-4 bottom-3 text-xl" title={t('bookings.yourRating','Your rating')} aria-hidden="true">
+                <div className="flex space-x-0">
                   {[1,2,3,4,5].map(i => (
-                    <button key={i} aria-label={`${i} star`} onClick={()=>handleStarClick(b.id, i)} className="text-yellow-500 text-xl">★</button>
+                    <span key={i} className={`${(b.feedback && b.feedback.rating >= i) ? 'text-yellow-500' : 'text-gray-300'}`}>★</span>
                   ))}
-                </div>
-                <textarea placeholder={t('bookings.leaveFeedbackPlaceholder', 'Write your feedback here')} onChange={(e)=>handleCommentChange(b.id, e.target.value)} className="w-full border rounded px-3 py-2 mb-2" rows={3}></textarea>
-                <div className="mb-2">
-                  <input type="file" accept="image/*" multiple onChange={(e)=>handleImageChange(b.id, e.target.files)} aria-label={t('bookings.uploadImageAria','Upload images')} />
-                </div>
-                <div className="flex space-x-2 overflow-x-auto mb-2">
-                  {(feedbackState[b.id]?.images || []).map((src, idx) => (
-                    <img key={idx} src={src} alt={t('bookings.imagePreviewAlt','preview')} className="w-20 h-20 object-cover rounded" />
-                  ))}
-                </div>
-                <div className="flex space-x-2">
-                  <button onClick={()=>handleSubmit(b.id)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">{t('bookings.submitFeedback','Submit feedback')}</button>
                 </div>
               </div>
             )}
+            {String(b.status || '').toLowerCase() !== 'completed' && (
+              <button onClick={()=>callSalon(b.salonName)} className="text-blue-500">{t('bookings.callSalon')}</button>
+            )}
           </div>
-        )}
+        </div>
+
       </div>
     )
   }
 
   // empty check per filter
-  const filteredList = filter === 'all' ? bookings : (filter === 'upcoming' ? upcoming : completed)
+  const filteredList = filter === 'all' ? sortedBookings : (filter === 'upcoming' ? upcoming : completed)
 
   return (
-    <div className="px-4 py-4 pb-4">
+    <div className="px-4 py-5 pb-4">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">{t('bookings.myBookings')}</h1>
         <div className="flex items-center space-x-3">
@@ -248,14 +248,14 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
                     <path d="M16 2v4M8 2v4M3 10h18" />
                   </svg>
                 </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No bookings</h3>
-              <p className="text-gray-500 mb-4">Book your first appointment to see it here</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{t('bookings.noBookingsTitle')}</h3>
+              <p className="text-gray-500 mb-4">{t('bookings.noBookingsDesc')}</p>
               <div className="mt-3">
-                <button onClick={goBackToHome} className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Browse Salons</button>
+                <button onClick={goBackToHome} className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">{t('bookings.browseSalons')}</button>
               </div>
             </div>
           ) : (
-            <div className="space-y-4">{bookings.map(renderBooking)}</div>
+            <div className="space-y-4">{sortedBookings.map(renderBooking)}</div>
           )}
         </div>
       ) : (

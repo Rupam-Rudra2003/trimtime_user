@@ -27,6 +27,10 @@ export const salonData = {
                 { name: 'Facial Treatment', price: 800, duration: '60 min', category: 'unisex' },
                 { name: 'Beard Trim', price: 200, duration: '20 min', category: 'men' },
                 { name: 'Manicure', price: 400, duration: '45 min', category: 'women' }
+            ],
+            reviews: [
+                { id: 'r1', name: 'Asha', stars: 5, comment: 'Great haircut and friendly staff.', date: '2025-10-01' },
+                { id: 'r2', name: 'Vikram', stars: 4, comment: 'Good service, a bit crowded but worth it.', date: '2025-09-12' }
             ]
         },
         {
@@ -48,6 +52,9 @@ export const salonData = {
             servicesList: [
                 { name: 'Hair Styling', price: 600, duration: '45 min', category: 'unisex' },
                 { name: 'Bridal Makeup', price: 2500, duration: '120 min', category: 'women' }
+            ],
+            reviews: [
+                { id: 'r3', name: 'Priya', stars: 5, comment: 'Lovely makeup for my sister — highly recommend.', date: '2025-08-21' }
             ]
         }
     ]
@@ -74,5 +81,8 @@ salonData.Kaichar.push({
         { name: 'Hair Cut', price: 350, duration: '30 min', category: 'unisex' },
         { name: 'Relaxing Spa', price: 1200, duration: '90 min', category: 'unisex' },
         { name: 'Waxing', price: 500, duration: '40 min', category: 'women' }
+    ],
+    reviews: [
+        { id: 'r4', name: 'Rafi', stars: 4, comment: 'Nice ambiance, will visit again.', date: '2025-07-05' }
     ]
 })

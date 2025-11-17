@@ -170,7 +170,34 @@
     "salonDetail": {
         "peopleWaitingFallback": "No queue info",
         "estimateFallback": "~15 min wait",
+        "waiting": "{{count}} waiting",
+        "waiting_plural": "{{count}} waiting",
+        "min": "min",
+        "closedBookingNotice": "Salon is closed — booking unavailable",
+        "closedBookingError": "Cannot book: salon is currently closed",
         "notFound": "Salon not found"
+    },
+    "ratings": {
+        "title": "Ratings",
+        "notFound": "Salon not found",
+        "noReviews": "No reviews yet",
+        "reviews": "ratings",
+        "showMore": "Read more",
+        "showLess": "Show less"
+    },
+    "rateBooking": {
+        "title": "Rate your visit",
+        "rateLabel": "Your rating",
+        "reviewLabel": "Write a review",
+        "uploadImages": "Upload images (optional)",
+        "submit": "Submit",
+        "confirmTitle": "Confirm submission",
+        "confirmMessage": "Are you sure you want to submit this rating?",
+        "notFound": "Booking not found"
+    },
+    "salonStatus": {
+        "open": "Open",
+        "closed": "Closed"
     },
     "buttons": {
         "editPhoto": "Edit photo",
@@ -189,6 +216,10 @@
             "glamour-studio": {
                 "name": "Glamour Studio",
                 "address": "Main Road, Kaichar"
+            },
+            "sunset-salon-closed": {
+                "name": "Sunset Salon",
+                "address": "Opposite Lakeside, Kaichar"
             }
         },
         "services": {
@@ -198,6 +229,12 @@
             "manicure": "Manicure",
             "hair-styling": "Hair Styling",
             "bridal-makeup": "Bridal Makeup"
+        },
+        "reviews": {
+            "r1": { "name": "Asha", "comment": "Great haircut and friendly staff." },
+            "r2": { "name": "Vikram", "comment": "Good service, a bit crowded but worth it." },
+            "r3": { "name": "Priya", "comment": "Lovely makeup for my sister — highly recommend." },
+            "r4": { "name": "Rafi", "comment": "Nice ambiance, will visit again." }
         }
     },
     "faq": {

@@ -409,3 +409,117 @@ nav {
     opacity: 0.55;
     filter: grayscale(60%);
 }
+
+
+/* Ratings page styles */
+
+.ratings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.rating-card {
+    display: block;
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    border-radius: 12px;
+    padding: 0.9rem;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.rating-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(2, 6, 23, 0.09);
+    border-color: rgba(59, 130, 246, 0.08);
+}
+
+.rating-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rating-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.rating-meta {
+    flex: 1 1 auto;
+}
+
+.rating-name {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 4px;
+    margin-top: 2px
+}
+
+.star {
+    width: 16px;
+    height: 16px;
+    color: #e5e7eb
+}
+
+.star.filled {
+    color: #f59e0b
+}
+
+.rating-date {
+    color: #6b7280;
+    font-size: 0.8rem
+}
+
+.rating-body {
+    margin-top: 0.6rem
+}
+
+.rating-comment {
+    color: #374151;
+    line-height: 1.45;
+    max-height: 6.6rem;
+    overflow: hidden;
+    transition: max-height 0.22s ease
+}
+
+.rating-comment.show {
+    max-height: 200px
+}
+
+.rating-toggle {
+    margin-top: 0.4rem;
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    cursor: pointer;
+    font-size: 0.9rem
+}
+
+.rating-card.expanded {
+    border-color: rgba(37, 99, 235, 0.12);
+    box-shadow: 0 18px 50px rgba(37, 99, 235, 0.06)
+}
+
+@media (min-width: 768px) {
+    .ratings-list {
+        gap: 1rem
+    }
+    .rating-card {
+        padding: 1rem
+    }
+}

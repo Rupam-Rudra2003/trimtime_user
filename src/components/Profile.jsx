@@ -120,7 +120,7 @@ export default function Profile({ onLogout }){
   }
 
   return (
-    <div id="profile-page" className="px-4 py-4 pb-6">
+    <div id="profile-page" className="px-4 py-5 pb-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">{t('profile.title')}</h1>
         <button onClick={goBackToHome} className="text-blue-500 hover:text-blue-700" aria-label={t('common.back')}>

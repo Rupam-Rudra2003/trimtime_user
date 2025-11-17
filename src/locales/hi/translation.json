@@ -170,7 +170,34 @@
     "salonDetail": {
         "peopleWaitingFallback": "कोई जानकारी नहीं",
         "estimateFallback": "~15 मिनट प्रतीक्षा",
+        "waiting": "{{count}} प्रतीक्षा",
+        "waiting_plural": "{{count}} प्रतीक्षा",
+        "min": "मिन",
+        "closedBookingNotice": "सलोन बंद है — बुकिंग उपलब्ध नहीं",
+        "closedBookingError": "बुकिंग नहीं कर सकते: सलोन वर्तमान में बंद है",
         "notFound": "सलोन नहीं मिला"
+    },
+    "ratings": {
+        "title": "रेटिंग्स",
+        "notFound": "सलोन नहीं मिला",
+        "noReviews": "अभी कोई समीक्षा नहीं",
+        "reviews": "रेटिंग्स",
+        "showMore": "और पढ़ें",
+        "showLess": "कम दिखाएँ"
+    },
+    "rateBooking": {
+        "title": "अपनी यात्रा रेट करें",
+        "rateLabel": "आपकी रेटिंग",
+        "reviewLabel": "एक समीक्षा लिखें",
+        "uploadImages": "छवियाँ अपलोड करें (वैकल्पिक)",
+        "submit": "सबमिट",
+        "confirmTitle": "सबमिशन की पुष्टि",
+        "confirmMessage": "क्या आप वाकई यह रेटिंग सबमिट करना चाहते हैं?",
+        "notFound": "बुकिंग नहीं मिली"
+    },
+    "salonStatus": {
+        "open": "खुला",
+        "closed": "बंद"
     },
     "buttons": {
         "editPhoto": "फोटो बदलें",
@@ -189,6 +216,10 @@
             "glamour-studio": {
                 "name": "ग्लैमर स्टूडियो",
                 "address": "मेन रोड, काइचार"
+            },
+            "sunset-salon-closed": {
+                "name": "सनसेट सलोन",
+                "address": "लेकसाइड के सामने, काइचार"
             }
         },
         "services": {
@@ -198,6 +229,12 @@
             "manicure": "मैनीक्योर",
             "hair-styling": "हेयर स्टाइलिंग",
             "bridal-makeup": "ब्राइडल मेकअप"
+        },
+        "reviews": {
+            "r1": { "name": "आशा", "comment": "बहुत अच्छा हेयरकट और दोस्ताना स्टाफ।" },
+            "r2": { "name": "विक्रम", "comment": "अच्छी सेवा, थोड़ी भीड़ रहती है लेकिन यात्रा मूल्य के लायक है।" },
+            "r3": { "name": "प्रिया", "comment": "बहुत अच्छी मेकअप सर्विस — मेरी बहन के लिए बढ़िया।" },
+            "r4": { "name": "रफ़ी", "comment": "माहौल अच्छा है, फिर से आऊँगा।" }
         }
     },
     "faq": {

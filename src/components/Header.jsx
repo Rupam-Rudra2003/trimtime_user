@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { changeLanguage } from '../i18n'
 
 export default function Header({ companyName, currentLocation, onLocationChange }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [open, setOpen] = useState(false)
   const [openLang, setOpenLang] = useState(false)
   const ref = useRef(null)
@@ -32,7 +32,7 @@ export default function Header({ companyName, currentLocation, onLocationChange 
   if(!isHome) return null
 
   return (
-    <header id="main-header" className="bg-white px-4 py-2 shadow-sm">
+    <header id="main-header" className="bg-white px-4 py-4 shadow-sm">
       <div className="flex justify-between items-center">
         {isHome ? (
           <>
@@ -41,7 +41,7 @@ export default function Header({ companyName, currentLocation, onLocationChange 
               {/* Language dropdown */}
               <div className="relative">
                 <button onClick={()=>setOpenLang(v=>!v)} className="flex items-center space-x-1 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-                  <span className="text-sm font-medium text-gray-700">{(window?.i18next?.language || 'en').toUpperCase()}</span>
+                  <span className="text-sm font-medium text-gray-700">{(i18n?.language || 'en').toUpperCase()}</span>
                   <svg className={`w-3 h-3 text-gray-600 transform transition-transform ${openLang? 'rotate-180':''}`} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
                 </button>
                 {openLang && (

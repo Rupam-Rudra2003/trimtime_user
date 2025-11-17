@@ -80,6 +80,10 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
 
   function confirmBooking(){
     // booking uses profile details automatically; require profile name & phone
+    if(isClosed){
+      setError(t('salonDetail.closedBookingError', 'Cannot book: salon is currently closed'))
+      return
+    }
     const profile = getProfile()
     const name = (profile && profile.name) || customerName
     const phone = (profile && profile.phone) || customerPhone
@@ -146,6 +150,10 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
     return 'bg-gray-100 text-gray-700'
   }
 
+  const isClosed = String(salon?.status || '').toLowerCase() === 'closed'
+
+  const estimateText = isClosed ? t('salonDetail.peopleWaitingFallback') : (salon?.estimate ? (typeof salon.estimate === 'number' ? `${salon.estimate} ${t('salonDetail.min')}` : salon.estimate) : t('salonDetail.estimateFallback'))
+
   
 
   return (
@@ -184,8 +192,10 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
       {/* Rating and Maps Link */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <div className="flex items-center bg-green-500 text-white px-2 py-1 rounded font-bold mr-2"><span id="detail-salon-rating">{salon.rating}</span> <span className="ml-1">★</span></div>
-          <span id="detail-rating-count" className="text-gray-600">({salon.ratingCount || 0} ratings)</span>
+          <button onClick={(e)=>{ e.stopPropagation(); navigate(`/salon/${salon.id}/ratings`) }} className="flex items-center bg-green-500 text-white px-2 py-1 rounded font-bold mr-2">
+            <span id="detail-salon-rating">{salon.rating}</span> <span className="ml-1">★</span>
+          </button>
+          <button onClick={(e)=>{ e.stopPropagation(); navigate(`/salon/${salon.id}/ratings`) }} className="text-gray-600 text-sm">({salon.ratingCount || 0} {t('ratings.reviews', 'ratings')})</button>
         </div>
         <a id="maps-link-detail" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(salon.address || salon.name)}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-500 hover:text-blue-700 text-sm font-medium">
           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg> View on Maps
@@ -198,11 +208,20 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <svg className="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span id="detail-people-waiting" className="text-gray-700 font-medium">{salon.waiting || t('salonDetail.peopleWaitingFallback')}</span>
+            <span id="detail-people-waiting" className="text-gray-700 font-medium">
+              {(() => {
+                if(isClosed) return t('salonDetail.peopleWaitingFallback')
+                const raw = salon.waiting
+                if(!raw) return t('salonDetail.peopleWaitingFallback')
+                const m = String(raw).match(/\d+/)
+                const count = m ? Number(m[0]) : raw
+                return t('salonDetail.waiting', { count })
+              })()}
+            </span>
           </div>
           <div className="flex items-center">
             <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" clipRule="evenodd" /></svg>
-            <span id="detail-estimate-time" className="text-gray-700 font-medium">{salon.estimate || t('salonDetail.estimateFallback')}</span>
+            <span id="detail-estimate-time" className="text-gray-700 font-medium">{estimateText}</span>
           </div>
         </div>
       </div>
@@ -262,7 +281,7 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
         </div>
         <div id="services-list" className="services-box services-scroll mt-1 border rounded bg-gray-50">
           <div className="space-y-3">
-            { (salon.servicesList || []).filter(svc => {
+              {(salon.servicesList || []).filter(svc => {
                 if(serviceFilter==='all') return true
                 const g = (svc.gender || svc.type || '').toString().toLowerCase()
                 if(serviceFilter==='unisex') return g.includes('uni') || g.includes('both') || g.includes('unisex')
@@ -270,7 +289,7 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
               }).map((service, idx)=> (
               <div key={idx} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center">
-                  <input id={`svc-${idx}`} type="checkbox" className="mr-3" onChange={()=>toggleService(service)} checked={!!selected.find(s=>s.name===service.name)} />
+                  <input id={`svc-${idx}`} type="checkbox" className="mr-3" onChange={()=>toggleService(service)} checked={!!selected.find(s=>s.name===service.name)} disabled={isClosed} title={isClosed ? t('salonStatus.closed') : ''} />
                   <div>
                     <label htmlFor={`svc-${idx}`} className="font-medium flex items-center">
                       <span>{serviceName(service.name)}</span>
@@ -291,12 +310,16 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
       {/* Bottom Booking Bar (fixed, hidden by default) */}
   <div id="booking-bar" className={`${selected.length>0 ? 'fixed bottom-0 left-0 right-0 z-60' : 'hidden'} bg-transparent`}>
         <div className="max-w-md mx-auto bg-white border-t border-gray-200 p-4">
-          <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-2">
             <div>
               <span id="selected-services-count" className="font-semibold text-gray-900">{t('common.servicesSelected', {count: selected.length})}</span>
               <p id="total-price" className="text-sm text-gray-600">{t('common.totalLabel')}: ₹{selected.reduce((s,a)=>s+a.price,0)}</p>
             </div>
-            <button onClick={openBooking} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium"> {t('common.bookAppointment')} </button>
+            {isClosed ? (
+              <div className="text-sm text-red-600 font-semibold">{t('salonDetail.closedBookingNotice', 'Salon is closed — booking unavailable')}</div>
+            ) : (
+              <button onClick={openBooking} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium"> {t('common.bookAppointment')} </button>
+            )}
           </div>
         </div>
       </div>

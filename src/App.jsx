@@ -15,6 +15,8 @@ import ScrollToTop from './components/ScrollToTop'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import ForgotPassword from './components/ForgotPassword'
+import Ratings from './components/Ratings'
+import RateBooking from './components/RateBooking'
 import { salonData, slideshowImages } from './data/salonData'
 import { clearProfile } from './utils/profile'
 
@@ -23,7 +25,21 @@ export default function App(){
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!localStorage.getItem('trimtime_profile'))
   const [location, setLocation] = useState('Kaichar')
   const [favorites, setFavorites] = useState(new Set())
-  const [bookings, setBookings] = useState([])
+  const [bookings, setBookings] = useState(() => [{
+    id: 'demo-completed-1',
+    salonId: 'raj-beauty',
+    salonName: 'Raj Beauty Parlour',
+    salonAddress: 'Near Kaichar Market, Kaichar',
+    customerName: 'Demo User',
+    customerPhone: '+91 99999 99999',
+    date: '2025-11-03',
+    time: '11:00',
+    services: [{ name: 'Hair Cut', price: 300, duration: '30 min', category: 'unisex' }],
+    totalPrice: 300,
+    status: 'completed',
+    bookingDate: new Date().toISOString(),
+    feedback: null
+  }])
   const [filter, setFilter] = useState('all') // 'all' | 'top' | 'men' | 'women'
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
@@ -73,7 +89,28 @@ export default function App(){
   function addBooking(booking){ setBookings(prev=>[...prev, booking]) }
   function cancelBooking(id){ setBookings(prev=>prev.filter(b=>b.id!==id)) }
   function submitFeedback(bookingId, feedback){
-    setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, feedback } : b))
+    setBookings(prev => {
+      const next = prev.map(b => b.id === bookingId ? { ...b, feedback } : b)
+      try{
+        const booking = next.find(b => b.id === bookingId)
+        if(booking && booking.salonId){
+          const all = Object.values(salonData).flat()
+          const salon = all.find(s => s.id === booking.salonId)
+          if(salon){
+            salon.reviews = salon.reviews || []
+            salon.reviews.unshift({
+              id: `user-${Date.now()}`,
+              name: booking.customerName || 'You',
+              comment: feedback.comment || '',
+              stars: feedback.rating || 0,
+              date: new Date().toLocaleDateString(),
+              images: feedback.images || []
+            })
+          }
+        }
+      }catch(e){/* ignore */}
+      return next
+    })
   }
   function callSalon(salonName){
     const all = Object.values(salonsByLocation).flat(); const s = all.find(x=>x.name===salonName)
@@ -143,6 +180,8 @@ export default function App(){
             </>
           )} />
           <Route path="/salon/:salonId" element={<SalonDetail salonsByLocation={salonsByLocation} addBooking={addBooking} favorites={favorites} toggleFavorite={toggleFavorite} />} />
+          <Route path="/salon/:salonId/ratings" element={<Ratings salonsByLocation={salonsByLocation} />} />
+          <Route path="/rate/:bookingId" element={<RateBooking bookings={bookings} submitFeedback={submitFeedback} />} />
           <Route path="/bookings" element={<Bookings bookings={bookings} cancelBooking={cancelBooking} callSalon={callSalon} submitFeedback={submitFeedback} />} />
           <Route path="/favorites" element={<Favorites favorites={favorites} salonsByLocation={salonsByLocation} openSalon={(s)=>navigate(`/salon/${s.id}`)} toggleFavorite={toggleFavorite} />} />
           <Route path="/profile" element={<Profile onLogout={logout} />} />
