@@ -201,7 +201,7 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
           <button onClick={(e)=>{ e.stopPropagation(); navigate(`/salon/${salon.id}/ratings`) }} className="text-gray-600 text-sm">({salon.ratingCount || 0} {t('ratings.reviews', 'ratings')})</button>
         </div>
         <a id="maps-link-detail" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(salon.address || salon.name)}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-500 hover:text-blue-700 text-sm font-medium">
-          <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg> View on Maps
+          <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg> {t('common.viewOnMaps')}
         </a>
       </div>
 
