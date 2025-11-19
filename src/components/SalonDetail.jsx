@@ -135,18 +135,21 @@ export default function SalonDetail({ salonsByLocation, addBooking, favorites, t
   function formatCategory(cat){
     if(!cat) return ''
     const c = cat.toString().toLowerCase()
-    if(c === 'unisex') return 'Unisex'
-    if(c === 'men') return 'Men'
-    if(c === 'women') return 'Women'
-    return cat
+    // normalize common variants to canonical keys
+    let key = c
+    if (c.includes('uni') || c.includes('both')) key = 'unisex'
+    else if (c.includes('men') && !c.includes('women')) key = 'men'
+    else if (c.includes('women') || c.includes('woman') || c.includes('lady')) key = 'women'
+    // use translation key with fallback to original value
+    return t(`categories.${key}`, cat)
   }
 
   function categoryColorClass(cat){
     if(!cat) return 'bg-gray-100 text-gray-700'
     const c = cat.toString().toLowerCase()
-    if(c === 'unisex') return 'bg-purple-100 text-purple-800'
-    if(c === 'men') return 'bg-blue-100 text-blue-800'
-    if(c === 'women') return 'bg-pink-100 text-pink-800'
+    if(c.includes('uni') || c.includes('both') || c === 'unisex') return 'bg-purple-100 text-purple-800'
+    if(c.includes('men') && !c.includes('women')) return 'bg-blue-100 text-blue-800'
+    if(c.includes('women') || c.includes('woman') || c.includes('lady')) return 'bg-pink-100 text-pink-800'
     return 'bg-gray-100 text-gray-700'
   }
 

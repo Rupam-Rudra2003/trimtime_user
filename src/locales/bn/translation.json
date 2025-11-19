@@ -69,6 +69,7 @@
         "browseSalons": "সালন দেখুন",
         "cancel": "বাতিল",
         "callSalon": "সালন কল করুন",
+        "rateUs": "রেট করুন",
         "bookingConfirmedTitle": "বুকিং নিশ্চিত!",
         "bookingConfirmedDesc": "আপনার অ্যাপয়েন্টমেন্ট সফলভাবে বুক হয়েছে।",
         "bookingConfirmedFollowup": "শীঘ্রই একটি নিশ্চিতকরণ বার্তা পাঠানো হবে।",
@@ -92,6 +93,15 @@
         "imagePreviewAlt": "প্রিভিউ",
         "submitFeedback": "ফিডব্যাক জমা করুন",
         "feedbackSaved": "ফিডব্যাক সেভ হয়েছে"
+    },
+    "bookings.status": {
+        "upcoming": "আসন্ন",
+        "completed": "সম্পন্ন"
+    },
+    "categories": {
+        "men": "পুরুষ",
+        "women": "নারী",
+        "unisex": "ইউনিসেক্স"
     },
     "auth": {
         "signIn": "সাইন ইন",

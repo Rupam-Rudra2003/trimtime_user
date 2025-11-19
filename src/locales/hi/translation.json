@@ -69,6 +69,7 @@
         "browseSalons": "सलोन देखें",
         "cancel": "रद्द करें",
         "callSalon": "सलोन कॉल करें",
+        "rateUs": "रेट करें",
         "bookingConfirmedTitle": "बुकिंग सुनिश्चित!",
         "bookingConfirmedDesc": "आपकी अपॉइंटमेंट सफलतापूर्वक बुक हो गई है।",
         "bookingConfirmedFollowup": "हम जल्द ही पुष्टि संदेश भेजेंगे।",
@@ -92,6 +93,15 @@
         "imagePreviewAlt": "पूर्वावलोकन",
         "submitFeedback": "प्रतिक्रिया सबमिट करें",
         "feedbackSaved": "प्रतिक्रिया सहेजी गई"
+    },
+    "bookings.status": {
+        "upcoming": "आगामी",
+        "completed": "पूर्ण"
+    },
+    "categories": {
+        "men": "पुरुष",
+        "women": "महिला",
+        "unisex": "यूनिसेक्स"
     },
     "auth": {
         "signIn": "साइन इन",

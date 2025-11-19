@@ -69,6 +69,7 @@
         "browseSalons": "Browse Salons",
         "cancel": "Cancel",
         "callSalon": "Call Salon",
+        "rateUs": "Rate Us",
         "bookingConfirmedTitle": "Booking Confirmed!",
         "bookingConfirmedDesc": "Your appointment has been successfully booked.",
         "bookingConfirmedFollowup": "We'll send you a confirmation message shortly.",
@@ -92,6 +93,15 @@
         "imagePreviewAlt": "preview",
         "submitFeedback": "Submit feedback",
         "feedbackSaved": "Feedback saved"
+    },
+    "bookings.status": {
+        "upcoming": "Upcoming",
+        "completed": "Completed"
+    },
+    "categories": {
+        "men": "Men",
+        "women": "Women",
+        "unisex": "Unisex"
     },
     "auth": {
         "signIn": "Sign In",

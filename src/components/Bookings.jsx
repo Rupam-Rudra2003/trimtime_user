@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useDynamicLocalization } from '../utils/localize'
 
 export default function Bookings({ bookings = [], cancelBooking, callSalon, submitFeedback }){
-  const {t} = useTranslation()
+  const {t, i18n} = useTranslation()
+  const [activeLang, setActiveLang] = React.useState(() => i18n?.language || 'en')
   const { salonName, salonAddress, serviceName } = useDynamicLocalization()
   const navigate = useNavigate()
   function goBackToHome(){ navigate('/') }
@@ -70,6 +71,11 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
   }
 
   React.useEffect(()=>{
+    function onLangChange(l){ try{ setActiveLang(l) }catch(e){} }
+    if(i18n && i18n.on){ i18n.on('languageChanged', onLangChange) }
+    return ()=>{ if(i18n && i18n.off){ i18n.off('languageChanged', onLangChange) } }
+  }, [i18n])
+  React.useEffect(()=>{
     const prev = document.body.style.overflow
     function onKeyDown(e){
       if(!bookingToCancel) return
@@ -110,8 +116,31 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
   }
   const sortedBookings = Array.isArray(bookings) ? [...bookings].sort((a,b) => getBookingTime(b) - getBookingTime(a)) : []
 
-  const upcoming = sortedBookings.filter(b => String(b.status || '').toLowerCase() === 'upcoming')
-  const completed = sortedBookings.filter(b => String(b.status || '').toLowerCase() === 'completed')
+  // Normalize and resolve booking status to a canonical key ('upcoming'|'completed')
+  function getStatusKey(b){
+    const raw = String(b?.status || '')
+    const s = raw.trim()
+    const lower = s.toLowerCase()
+    if(!s) return ''
+    if(lower === 'upcoming' || lower === 'completed') return lower
+    // check known locale translations (helpful if stored status is localized)
+    const langs = ['en','hi','bn']
+    for(const lang of langs){
+      try{
+        const up = t('bookings.status.upcoming', { lng: lang })
+        const comp = t('bookings.status.completed', { lng: lang })
+        if(s === up) return 'upcoming'
+        if(s === comp) return 'completed'
+      }catch(e){ /* ignore */ }
+    }
+    // heuristic fallback
+    if(lower.indexOf('upcom') !== -1 || lower.indexOf('coming') !== -1) return 'upcoming'
+    if(lower.indexOf('comp') !== -1 || lower.indexOf('complete') !== -1) return 'completed'
+    return lower
+  }
+
+  const upcoming = sortedBookings.filter(b => getStatusKey(b) === 'upcoming')
+  const completed = sortedBookings.filter(b => getStatusKey(b) === 'completed')
 
   function formatDay(dateStr){
     try{
@@ -134,7 +163,12 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
   }
 
   function renderBooking(b){
-    const isCompleted = String(b.status || '').toLowerCase() === 'completed'
+    const rawStatus = String(b.status || '')
+    const statusKey = getStatusKey(b)
+    const isCompleted = statusKey === 'completed'
+    const localizedStatus = statusKey ? t(`bookings.status.${statusKey}`, { lng: i18n?.language, defaultValue: rawStatus }) : rawStatus
+    // dev debug: log resolved status and active language to the console
+    try{ console.debug('[Bookings] lang=', i18n?.language, 'activeLang=', activeLang, 'rawStatus=', rawStatus, 'statusKey=', statusKey, 'localized=', localizedStatus) }catch(e){}
     return (
       <div key={b.id} className={`rounded-lg shadow-sm border px-4 py-3 relative ${isCompleted ? '' : 'bg-white'}`}>
         <div className="mb-1 flex items-start justify-between">
@@ -143,7 +177,7 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
             <p className="text-sm text-gray-600 mt-1">{b.salonId ? salonAddress(b.salonId, b.salonAddress) : b.salonAddress}</p>
           </div>
           <div className="flex-shrink-0 ml-4">
-            <span className={`text-sm font-medium capitalize px-3 py-1 rounded ${String(b.status || '').toLowerCase() === 'upcoming' ? 'bg-green-100 text-green-700' : (isCompleted ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700')}`}>{b.status}</span>
+            <span className={`text-sm font-medium capitalize px-3 py-1 rounded ${statusKey === 'upcoming' ? 'bg-green-100 text-green-700' : (isCompleted ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700')}`}>{localizedStatus}</span>
           </div>
         </div>
 
@@ -170,7 +204,7 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
             {b.services.map((svc, idx) => {
               const cat = String(svc.category || '').toLowerCase()
               const tagClass = cat === 'men' ? 'tag--men' : (cat === 'women' ? 'tag--women' : 'tag--unisex')
-              const label = svc.category ? String(svc.category).charAt(0).toUpperCase() + String(svc.category).slice(1) : ''
+              const label = svc.category ? t(`categories.${cat}`, { defaultValue: String(svc.category).charAt(0).toUpperCase() + String(svc.category).slice(1) }) : ''
               return (
                 <div key={idx} className="flex items-center justify-between py-1 px-2 border-b last:border-b-0">
                   <div className="flex items-center">
@@ -193,13 +227,13 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
             <span className="font-semibold">₹{b.totalPrice ?? 0}</span>
           </div>
           <div className="flex items-center space-x-3">
-            {String(b.status || '').toLowerCase() === 'upcoming' && (<button onClick={(e)=>{ e.stopPropagation(); setBookingToCancel(b) }} className="text-red-500">{t('bookings.cancel')}</button>)}
-            {String(b.status || '').toLowerCase() === 'completed' && !b.feedback && (
+            {getStatusKey(b) === 'upcoming' && (<button onClick={(e)=>{ e.stopPropagation(); setBookingToCancel(b) }} className="text-red-500">{t('bookings.cancel')}</button>)}
+            {getStatusKey(b) === 'completed' && !b.feedback && (
               <div className="flex items-center space-x-2">
                 <button onClick={()=>navigate(`/rate/${b.id}`)} className="text-blue-500">{t('bookings.rateUs','Rate Us')}</button>
               </div>
             )}
-            {String(b.status || '').toLowerCase() === 'completed' && b.feedback && (
+            {getStatusKey(b) === 'completed' && b.feedback && (
               <div className="absolute right-4 bottom-3 text-xl" title={t('bookings.yourRating','Your rating')} aria-hidden="true">
                 <div className="flex space-x-0">
                   {[1,2,3,4,5].map(i => (
@@ -208,7 +242,7 @@ export default function Bookings({ bookings = [], cancelBooking, callSalon, subm
                 </div>
               </div>
             )}
-            {String(b.status || '').toLowerCase() !== 'completed' && (
+            {getStatusKey(b) !== 'completed' && (
               <button onClick={()=>callSalon(b.salonName)} className="text-blue-500">{t('bookings.callSalon')}</button>
             )}
           </div>
